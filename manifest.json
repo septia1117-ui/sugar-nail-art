@@ -2,8 +2,8 @@
   "name": "Sugar Nail Art",
   "short_name": "SugarNail",
   "description": "Premium nail art booking application",
-  "start_url": "/index.html",
-  "scope": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#6D28D9",
@@ -13,13 +13,13 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "/assets/icon-192.png",
+      "src": "assets/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/icon-512.png",
+      "src": "assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -27,19 +27,19 @@
   ],
   "screenshots": [
     {
-      "src": "/assets/screenshot-home.png",
+      "src": "assets/screenshot-home.png",
       "sizes": "430x932",
       "type": "image/png",
       "label": "Home - Package Selection"
     },
     {
-      "src": "/assets/screenshot-cart.png",
+      "src": "assets/screenshot-cart.png",
       "sizes": "430x932",
       "type": "image/png",
       "label": "Cart - Add-ons & Checkout"
     },
     {
-      "src": "/assets/screenshot-orders.png",
+      "src": "assets/screenshot-orders.png",
       "sizes": "430x932",
       "type": "image/png",
       "label": "Orders - Order History"

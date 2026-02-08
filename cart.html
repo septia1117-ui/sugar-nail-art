@@ -11,9 +11,9 @@
     <title>Keranjang - Sugar Nail Art</title>
 
     <!-- PWA -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link rel="apple-touch-icon" href="/assets/icon-192.png" />
+    <link rel="apple-touch-icon" href="assets/icon-192.png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -392,11 +392,11 @@
         // Determine image based on package name
         let imageSrc = "";
         if (packageData.name.includes("Basic")) {
-          imageSrc = "/assets/basic-package.png";
+          imageSrc = "assets/basic-package.png";
         } else if (packageData.name.includes("Deluxe")) {
-          imageSrc = "/assets/deluxe-package.png";
+          imageSrc = "assets/deluxe-package.png";
         } else if (packageData.name.includes("Premium")) {
-          imageSrc = "/assets/premium-package.png";
+          imageSrc = "assets/premium-package.png";
         }
 
         // Display selected package with image

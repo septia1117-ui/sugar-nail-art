@@ -5,18 +5,18 @@
 
 const CACHE_NAME = "sugar-nail-art-v1";
 const urlsToCache = [
-  "/",
-  "/index.html",
-  "/cart.html",
-  "/orders.html",
-  "/app.js",
-  "/manifest.json",
-  "/assets/icon-192.png",
-  "/assets/icon-512.png",
-  "/assets/logo.jpg",
-  "/assets/basic-package.png",
-  "/assets/deluxe-package.png",
-  "/assets/premium-package.png",
+  "./",
+  "index.html",
+  "cart.html",
+  "orders.html",
+  "app.js",
+  "manifest.json",
+  "assets/icon-192.png",
+  "assets/icon-512.png",
+  "assets/logo.jpg",
+  "assets/basic-package.png",
+  "assets/deluxe-package.png",
+  "assets/premium-package.png",
 ];
 
 // Install event - cache essential files
