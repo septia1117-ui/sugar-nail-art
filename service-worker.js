@@ -3,7 +3,7 @@
  * Provides offline support and caching for PWA
  */
 
-const CACHE_NAME = "sugar-nail-art-v1";
+const CACHE_NAME = "sugar-nail-art-v2";
 const urlsToCache = [
   "./",
   "index.html",
