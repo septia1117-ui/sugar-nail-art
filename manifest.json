@@ -50,10 +50,10 @@
       "name": "View Packages",
       "short_name": "Packages",
       "description": "Browse nail art packages",
-      "url": "/index.html",
+      "url": "./index.html",
       "icons": [
         {
-          "src": "/assets/icon-192.png",
+          "src": "assets/icon-192.png",
           "sizes": "192x192"
         }
       ]
@@ -62,10 +62,10 @@
       "name": "My Cart",
       "short_name": "Cart",
       "description": "View shopping cart",
-      "url": "/cart.html",
+      "url": "./cart.html",
       "icons": [
         {
-          "src": "/assets/icon-192.png",
+          "src": "assets/icon-192.png",
           "sizes": "192x192"
         }
       ]
@@ -74,10 +74,10 @@
       "name": "My Orders",
       "short_name": "Orders",
       "description": "View order history",
-      "url": "/orders.html",
+      "url": "./orders.html",
       "icons": [
         {
-          "src": "/assets/icon-192.png",
+          "src": "assets/icon-192.png",
           "sizes": "192x192"
         }
       ]
