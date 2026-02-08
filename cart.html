@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#6D28D9" />
+
+    <title>Keranjang - Sugar Nail Art</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-icon" href="/assets/icon-192.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "primary-purple": "#6D28D9",
+              "vibrant-pink": "#EC4899",
+              "soft-bg": "#FDE2F3",
+              "dark-text": "#1E1B4B",
+            },
+            fontFamily: {
+              poppins: ["Poppins", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+      * {
+        font-family: "Poppins", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        max-width: 430px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, #fde2f3 0%, #f3e8ff 100%);
+        min-height: 100vh;
+        padding-bottom: 200px; /* Increased for better scrolling */
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+      }
+
+      /* Desktop centering */
+      @media (min-width: 431px) {
+        body {
+          box-shadow: 0 0 60px rgba(109, 40, 217, 0.12);
+        }
+      }
+
+      .package-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 12px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #6d28d9 0%, #ec4899 100%);
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:active {
+        transform: scale(0.95);
+      }
+
+      .nav-item {
+        transition: all 0.3s ease;
+      }
+
+      .nav-item.active {
+        color: #6d28d9;
+      }
+
+      .addon-checkbox {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #d1d5db;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s;
+      }
+
+      .addon-checkbox:checked {
+        background: linear-gradient(135deg, #6d28d9 0%, #ec4899 100%);
+        border-color: #6d28d9;
+      }
+
+      .addon-checkbox:checked::after {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .toast {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100px);
+        background: white;
+        padding: 16px 24px;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(109, 40, 217, 0.3);
+        z-index: 1000;
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+
+      .loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-soft-bg">
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <div class="flex items-center gap-3">
+        <span
+          id="toast-message"
+          class="text-center text-pink-500 font-medium text-xs"
+        ></span>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+      <div class="px-6 py-4">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-purple to-vibrant-pink flex items-center justify-center"
+          >
+            <i
+              data-feather="shopping-cart"
+              class="text-white"
+              width="16"
+              height="16"
+            ></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-semibold text-fuchsia-500">Keranjang</h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="px-6 py-6 pb-32">
+      <!-- Empty State -->
+      <div id="empty-state" class="hidden text-center py-16">
+        <div
+          class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center"
+        >
+          <i
+            data-feather="shopping-cart"
+            width="48"
+            height="48"
+            class="text-gray-400"
+          ></i>
+        </div>
+        <h3 class="text-xl font-semibold text-dark-text mb-2">
+          Keranjang Kosong
+        </h3>
+        <p class="text-gray-500 mb-6">Pilih paket nail art terlebih dahulu</p>
+        <a
+          href="index.html"
+          class="inline-block btn-primary text-white font-semibold px-8 py-3 rounded-full"
+        >
+          Pilih Paket
+        </a>
+      </div>
+
+      <!-- Cart Content -->
+      <div id="cart-content">
+        <!-- Selected Package -->
+        <section class="mb-6">
+          <h2 class="text-lg font-semibold text-dark-text mb-3">
+            Paket Dipilih
+          </h2>
+          <div id="selected-package" class="bg-white rounded-2xl shadow-md p-5">
+            <!-- Will be populated by JS -->
+          </div>
+        </section>
+
+        <!-- Add-ons -->
+        <section class="mb-6">
+          <h2 class="text-lg font-semibold text-dark-text mb-3">
+            Tambahan Layanan
+          </h2>
+          <div class="bg-white rounded-2xl shadow-md p-5 space-y-4">
+            <label class="flex items-center justify-between cursor-pointer">
+              <div class="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  class="addon-checkbox"
+                  data-addon="Nail Extension"
+                  data-price="30000"
+                />
+                <div>
+                  <p class="font-medium text-dark-text">Nail Extension</p>
+                  <p class="text-xs text-gray-500">
+                    Perpanjangan kuku profesional
+                  </p>
+                </div>
+              </div>
+              <span class="text-primary-purple font-semibold">+30K</span>
+            </label>
+
+            <div class="border-t border-gray-100"></div>
+
+            <label class="flex items-center justify-between cursor-pointer">
+              <div class="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  class="addon-checkbox"
+                  data-addon="Nail Decoration"
+                  data-price="20000"
+                />
+                <div>
+                  <p class="font-medium text-dark-text">Nail Decoration</p>
+                  <p class="text-xs text-gray-500">Dekorasi cantik dan unik</p>
+                </div>
+              </div>
+              <span class="text-primary-purple font-semibold">+20K</span>
+            </label>
+
+            <div class="border-t border-gray-100"></div>
+
+            <label class="flex items-center justify-between cursor-pointer">
+              <div class="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  class="addon-checkbox"
+                  data-addon="Glitter Polish"
+                  data-price="15000"
+                />
+                <div>
+                  <p class="font-medium text-dark-text">Glitter Polish</p>
+                  <p class="text-xs text-gray-500">Cat kuku berkilau glitter</p>
+                </div>
+              </div>
+              <span class="text-primary-purple font-semibold">+15K</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- Notes -->
+        <section class="mb-6">
+          <h2 class="text-lg font-semibold text-dark-text mb-3">
+            Catatan Khusus
+          </h2>
+          <div class="bg-white rounded-2xl shadow-md p-5">
+            <textarea
+              id="order-notes"
+              rows="4"
+              class="w-full resize-none outline-none text-dark-text"
+              placeholder="Contoh: warna pastel ungu pink ya kak..."
+            ></textarea>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Sticky Checkout Section -->
+    <div
+      id="checkout-section"
+      class="fixed z-50 bottom-16 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-gray-200 p-6 z-40"
+      style="max-width: 430px; margin: 0 auto"
+    >
+      <!-- Order Summary -->
+      <div class="mb-4 space-y-2">
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-600">Paket</span>
+          <span id="package-price" class="font-medium text-dark-text">Rp0</span>
+        </div>
+        <div id="addons-summary" class="space-y-1">
+          <!-- Addons will be listed here -->
+        </div>
+        <div class="border-t border-gray-200 pt-2 flex justify-between">
+          <span class="font-semibold text-dark-text">Total</span>
+          <span id="total-price" class="font-bold text-xl text-primary-purple"
+            >Rp0</span
+          >
+        </div>
+      </div>
+
+      <!-- Checkout Button -->
+      <button
+        id="checkout-btn"
+        class="w-full btn-primary text-white font-semibold py-4 rounded-full flex items-center justify-center gap-2"
+      >
+        <i data-feather="send" width="20" height="20"></i>
+        <span>Checkout via WhatsApp</span>
+      </button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-200 z-50"
+      style="max-width: 430px; margin: 0 auto"
+    >
+      <div class="flex items-center justify-around py-3 px-6">
+        <a
+          href="index.html"
+          class="nav-item flex flex-col items-center gap-1 text-gray-400"
+        >
+          <i data-feather="home" width="24" height="24"></i>
+          <span class="text-xs font-medium">Home</span>
+        </a>
+        <a
+          href="cart.html"
+          class="nav-item active flex flex-col items-center gap-1"
+        >
+          <i data-feather="shopping-cart" width="24" height="24"></i>
+          <span class="text-xs font-medium">Cart</span>
+        </a>
+        <a
+          href="orders.html"
+          class="nav-item flex flex-col items-center gap-1 text-gray-400"
+        >
+          <i data-feather="file-text" width="24" height="24"></i>
+          <span class="text-xs font-medium">Orders</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main App Script -->
+    <script src="app.js"></script>
+    <script>
+      // Initialize Feather Icons
+      feather.replace();
+
+      // Load cart and initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        loadCart();
+        setupEventListeners();
+      });
+
+      function loadCart() {
+        const packageData = JSON.parse(localStorage.getItem("selectedPackage"));
+
+        if (!packageData) {
+          document.getElementById("empty-state").classList.remove("hidden");
+          document.getElementById("cart-content").classList.add("hidden");
+          document.getElementById("checkout-section").classList.add("hidden");
+          return;
+        }
+
+        // Determine image based on package name
+        let imageSrc = "";
+        if (packageData.name.includes("Basic")) {
+          imageSrc = "/assets/basic-package.png";
+        } else if (packageData.name.includes("Deluxe")) {
+          imageSrc = "/assets/deluxe-package.png";
+        } else if (packageData.name.includes("Premium")) {
+          imageSrc = "/assets/premium-package.png";
+        }
+
+        // Display selected package with image
+        document.getElementById("selected-package").innerHTML = `
+                <div class="flex items-center gap-4">
+                    <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 flex-shrink-0 overflow-hidden">
+                        ${imageSrc ? `<img src="${imageSrc}" alt="${packageData.name}" class="package-image w-full h-full" onerror="this.style.display='none'">` : ""}
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-dark-text">${packageData.name}</h3>
+                        <p class="text-xl font-bold text-primary-purple">${formatRupiah(packageData.price)}</p>
+                    </div>
+                </div>
+            `;
+
+        // Load saved notes
+        const savedNotes = localStorage.getItem("orderNotes");
+        if (savedNotes) {
+          document.getElementById("order-notes").value = savedNotes;
+        }
+
+        // Load saved addons
+        const savedAddons = JSON.parse(
+          localStorage.getItem("selectedAddons") || "[]",
+        );
+        savedAddons.forEach((addonName) => {
+          const checkbox = document.querySelector(
+            `[data-addon="${addonName}"]`,
+          );
+          if (checkbox) checkbox.checked = true;
+        });
+
+        updateOrderSummary();
+      }
+
+      function setupEventListeners() {
+        // Add-ons checkboxes
+        document.querySelectorAll(".addon-checkbox").forEach((checkbox) => {
+          checkbox.addEventListener("change", function () {
+            updateOrderSummary();
+            saveAddons();
+          });
+        });
+
+        // Notes textarea
+        document
+          .getElementById("order-notes")
+          .addEventListener("input", function () {
+            localStorage.setItem("orderNotes", this.value);
+          });
+
+        // Checkout button
+        document
+          .getElementById("checkout-btn")
+          .addEventListener("click", handleCheckout);
+      }
+
+      function updateOrderSummary() {
+        const packageData = JSON.parse(localStorage.getItem("selectedPackage"));
+        if (!packageData) return;
+
+        let total = packageData.price;
+
+        // Update package price display
+        document.getElementById("package-price").textContent = formatRupiah(
+          packageData.price,
+        );
+
+        // Get selected addons
+        const addonsContainer = document.getElementById("addons-summary");
+        addonsContainer.innerHTML = "";
+
+        document
+          .querySelectorAll(".addon-checkbox:checked")
+          .forEach((checkbox) => {
+            const addonName = checkbox.dataset.addon;
+            const addonPrice = parseInt(checkbox.dataset.price);
+            total += addonPrice;
+
+            addonsContainer.innerHTML += `
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">+ ${addonName}</span>
+                        <span class="font-medium text-dark-text">${formatRupiah(addonPrice)}</span>
+                    </div>
+                `;
+          });
+
+        // Update total
+        document.getElementById("total-price").textContent =
+          formatRupiah(total);
+      }
+
+      function saveAddons() {
+        const selectedAddons = [];
+        document
+          .querySelectorAll(".addon-checkbox:checked")
+          .forEach((checkbox) => {
+            selectedAddons.push(checkbox.dataset.addon);
+          });
+        localStorage.setItem("selectedAddons", JSON.stringify(selectedAddons));
+      }
+
+      function handleCheckout() {
+        const packageData = JSON.parse(localStorage.getItem("selectedPackage"));
+        const notes = document.getElementById("order-notes").value;
+        const btn = document.getElementById("checkout-btn");
+
+        // Show loading
+        btn.innerHTML =
+          '<div class="loading-spinner"></div><span>Memproses...</span>';
+        btn.disabled = true;
+
+        // Get selected addons with prices
+        const addons = [];
+        let addonsTotal = 0;
+        document
+          .querySelectorAll(".addon-checkbox:checked")
+          .forEach((checkbox) => {
+            const price = parseInt(checkbox.dataset.price);
+            addons.push({
+              name: checkbox.dataset.addon,
+              price: price,
+            });
+            addonsTotal += price;
+          });
+
+        const total = packageData.price + addonsTotal;
+
+        // Create order object
+        const order = {
+          id: generateOrderId(),
+          date: new Date().toISOString().split("T")[0],
+          package: packageData.name,
+          basePrice: packageData.price,
+          addons: addons,
+          note: notes,
+          total: total,
+        };
+
+        // Save to order history
+        saveOrderToHistory(order);
+
+        // Generate WhatsApp message
+        let message = `Halo Sugar Nail Art 💅\n\nSaya ingin order nail art:\n\n`;
+        message += `✨ Paket: ${packageData.name}\n`;
+        message += `💰 Harga: ${formatRupiah(packageData.price)}\n\n`;
+
+        if (addons.length > 0) {
+          message += `➕ Add-ons:\n`;
+          addons.forEach((addon) => {
+            message += `- ${addon.name} (+${formatRupiah(addon.price)})\n`;
+          });
+          message += `\n`;
+        }
+
+        if (notes) {
+          message += `📝 Catatan:\n${notes}\n\n`;
+        }
+
+        message += `Total: ${formatRupiah(total)}\n\n`;
+        message += `Terima kasih 😊`;
+
+        // Encode message
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappNumber = "6282297978885"; // TODO: Replace with actual admin number
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+        // Clear cart data
+        setTimeout(() => {
+          localStorage.removeItem("selectedPackage");
+          localStorage.removeItem("selectedAddons");
+          localStorage.removeItem("orderNotes");
+
+          // Show success toast
+          showToast("Pesanan berhasil! Mengarahkan ke WhatsApp...");
+
+          // Redirect to WhatsApp
+          setTimeout(() => {
+            window.location.href = whatsappUrl;
+          }, 1000);
+        }, 800);
+      }
+
+      function saveOrderToHistory(order) {
+        const orders = JSON.parse(localStorage.getItem("orderHistory") || "[]");
+        orders.unshift(order); // Add to beginning
+        localStorage.setItem("orderHistory", JSON.stringify(orders));
+      }
+
+      function generateOrderId() {
+        const prefix = "SNA";
+        const randomNum = Math.floor(1000 + Math.random() * 9000);
+        return `#${prefix}${randomNum}`;
+      }
+    </script>
+  </body>
+</html>

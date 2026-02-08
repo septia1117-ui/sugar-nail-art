@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#6D28D9" />
+
+    <title>Pesanan - Sugar Nail Art</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-icon" href="/assets/icon-192.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "primary-purple": "#6D28D9",
+              "vibrant-pink": "#EC4899",
+              "soft-bg": "#FDE2F3",
+              "dark-text": "#1E1B4B",
+            },
+            fontFamily: {
+              poppins: ["Poppins", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+      * {
+        font-family: "Poppins", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        max-width: 430px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, #fde2f3 0%, #f3e8ff 100%);
+        min-height: 100vh;
+        padding-bottom: 80px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #6d28d9 0%, #ec4899 100%);
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:active {
+        transform: scale(0.95);
+      }
+
+      .btn-secondary {
+        background: white;
+        color: #6d28d9;
+        border: 2px solid #6d28d9;
+        transition: all 0.3s ease;
+      }
+
+      .btn-secondary:active {
+        transform: scale(0.95);
+      }
+
+      .nav-item {
+        transition: all 0.3s ease;
+      }
+
+      .nav-item.active {
+        color: #6d28d9;
+      }
+
+      .order-card {
+        transition: all 0.3s ease;
+      }
+
+      .order-card:active {
+        transform: scale(0.98);
+      }
+
+      .toast {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100px);
+        background: white;
+        padding: 16px 24px;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(109, 40, 217, 0.3);
+        z-index: 1000;
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body class="bg-soft-bg">
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <div class="flex items-center gap-3">
+        <i data-feather="check-circle" class="text-primary-purple"></i>
+        <span id="toast-message" class="text-dark-text font-medium"></span>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+      <div class="px-6 py-4">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-purple to-vibrant-pink flex items-center justify-center"
+          >
+            <i
+              data-feather="file-text"
+              class="text-white"
+              width="16"
+              height="16"
+            ></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-semibold text-fuchsia-500">
+              Riwayat Pesanan
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="px-6 py-6">
+      <!-- Empty State -->
+      <div id="empty-state" class="hidden text-center py-16">
+        <div
+          class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center"
+        >
+          <i
+            data-feather="inbox"
+            width="48"
+            height="48"
+            class="text-gray-400"
+          ></i>
+        </div>
+        <h3 class="text-xl font-semibold text-dark-text mb-2">
+          Belum Ada Pesanan
+        </h3>
+        <p class="text-gray-500 mb-6">
+          Mulai pesan paket nail art favorit Anda
+        </p>
+        <a
+          href="index.html"
+          class="inline-block btn-primary text-white font-semibold px-8 py-3 rounded-full"
+        >
+          Lihat Paket
+        </a>
+      </div>
+
+      <!-- Orders List -->
+      <div id="orders-list" class="space-y-4">
+        <!-- Orders will be populated by JS -->
+      </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-200 z-50"
+      style="max-width: 430px; margin: 0 auto"
+    >
+      <div class="flex items-center justify-around py-3 px-6">
+        <a
+          href="index.html"
+          class="nav-item flex flex-col items-center gap-1 text-gray-400"
+        >
+          <i data-feather="home" width="24" height="24"></i>
+          <span class="text-xs font-medium">Home</span>
+        </a>
+        <a
+          href="cart.html"
+          class="nav-item flex flex-col items-center gap-1 text-gray-400"
+        >
+          <i data-feather="shopping-cart" width="24" height="24"></i>
+          <span class="text-xs font-medium">Cart</span>
+        </a>
+        <a
+          href="orders.html"
+          class="nav-item active flex flex-col items-center gap-1"
+        >
+          <i data-feather="file-text" width="24" height="24"></i>
+          <span class="text-xs font-medium">Orders</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main App Script -->
+    <script src="app.js"></script>
+    <script>
+      // Initialize Feather Icons
+      feather.replace();
+
+      // Load orders on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        loadOrders();
+      });
+
+      function loadOrders() {
+        const orders = JSON.parse(localStorage.getItem("orderHistory") || "[]");
+        const ordersList = document.getElementById("orders-list");
+        const emptyState = document.getElementById("empty-state");
+
+        if (orders.length === 0) {
+          emptyState.classList.remove("hidden");
+          ordersList.classList.add("hidden");
+          return;
+        }
+
+        emptyState.classList.add("hidden");
+        ordersList.classList.remove("hidden");
+
+        ordersList.innerHTML = orders
+          .map(
+            (order) => `
+                <div class="order-card bg-white rounded-2xl shadow-md p-5">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <p class="text-sm font-semibold text-primary-purple">${order.id}</p>
+                            <p class="text-xs text-gray-500 mt-1">${formatDate(order.date)}</p>
+                        </div>
+                        <div class="px-3 py-1 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full">
+                            <span class="text-xs font-medium text-primary-purple">Selesai</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Paket</span>
+                            <span class="text-sm font-medium text-dark-text">${order.package}</span>
+                        </div>
+                        
+                        ${
+                          order.addons && order.addons.length > 0
+                            ? `
+                            <div class="flex justify-between">
+                                <span class="text-sm text-gray-600">Add-ons</span>
+                                <div class="text-right">
+                                    ${order.addons
+                                      .map(
+                                        (addon) => `
+                                        <p class="text-xs text-gray-500">${addon.name}</p>
+                                    `,
+                                      )
+                                      .join("")}
+                                </div>
+                            </div>
+                        `
+                            : ""
+                        }
+                        
+                        ${
+                          order.note
+                            ? `
+                            <div class="pt-2 border-t border-gray-100">
+                                <p class="text-xs text-gray-500">Catatan:</p>
+                                <p class="text-sm text-dark-text mt-1">${order.note}</p>
+                            </div>
+                        `
+                            : ""
+                        }
+                    </div>
+                    
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div>
+                            <p class="text-xs text-gray-500">Total Pembayaran</p>
+                            <p class="text-xl font-bold text-primary-purple">${formatRupiah(order.total)}</p>
+                        </div>
+                        <button 
+                            onclick="reorder('${order.package}', ${order.basePrice}, ${JSON.stringify(order.addons || []).replace(/"/g, "&quot;")}, '${(order.note || "").replace(/'/g, "\\'")}')"
+                            class="btn-secondary font-semibold px-6 py-2 rounded-full text-sm"
+                        >
+                            Pesan Lagi
+                        </button>
+                    </div>
+                </div>
+            `,
+          )
+          .join("");
+
+        // Re-initialize Feather Icons for dynamically added content
+        feather.replace();
+      }
+
+      function reorder(packageName, packagePrice, addons, note) {
+        // Save package to cart
+        localStorage.setItem(
+          "selectedPackage",
+          JSON.stringify({
+            name: packageName,
+            price: packagePrice,
+          }),
+        );
+
+        // Save addons
+        const addonNames = addons.map((a) => a.name);
+        localStorage.setItem("selectedAddons", JSON.stringify(addonNames));
+
+        // Save note
+        if (note) {
+          localStorage.setItem("orderNotes", note);
+        }
+
+        // Show toast
+        showToast("Pesanan berhasil ditambahkan ke keranjang!");
+
+        // Navigate to cart
+        setTimeout(() => {
+          window.location.href = "cart.html";
+        }, 800);
+      }
+
+      function formatDate(dateString) {
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(dateString).toLocaleDateString("id-ID", options);
+      }
+    </script>
+  </body>
+</html>

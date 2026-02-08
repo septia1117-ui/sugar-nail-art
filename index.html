@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#6D28D9" />
+    <meta
+      name="description"
+      content="Sugar Nail Art - Pemesanan Paket Nail Art Premium"
+    />
+
+    <title>Sugar Nail Art 💅</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <link rel="apple-touch-icon" href="/assets/icon-192.png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Italianno&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "primary-purple": "#6D28D9",
+              "vibrant-pink": "#EC4899",
+              "soft-bg": "#FDE2F3",
+              "dark-text": "#1E1B4B",
+            },
+            fontFamily: {
+              poppins: ["Poppins", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+      .italianno {
+        font-family: "Italianno", cursive;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      * {
+        font-family: "Poppins", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        margin: 0 auto;
+        background: linear-gradient(135deg, #fde2f3 0%, #f3e8ff 100%);
+        min-height: 100vh;
+        padding-bottom: 80px;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+      }
+
+      /* Desktop centering */
+      @media (min-width: 431px) {
+        body {
+          box-shadow: 0 0 60px rgba(109, 40, 217, 0.12);
+        }
+      }
+
+      .package-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .package-card:active {
+        transform: scale(0.98);
+      }
+
+      .btn-primary {
+        background: #d928cd;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:active {
+        transform: scale(0.95);
+      }
+
+      .nav-item {
+        transition: all 0.3s ease;
+      }
+
+      .nav-item.active {
+        color: #6d28d9;
+      }
+
+      /* Toast notification */
+      .toast {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100px);
+        background: white;
+        padding: 16px 24px;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(109, 40, 217, 0.3);
+        z-index: 1000;
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .gallery-item {
+        aspect-ratio: 1;
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #e9d5ff 0%, #fed7e2 100%);
+        position: relative;
+      }
+
+      .package-image,
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <div class="flex items-center gap-3">
+        <span id="toast-message" class="text-center text-pink-500 font-medium text-xs"></span>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+      <div class="px-6 py-4">
+        <div class="flex items-center gap-3">
+          <img src="/assets/logo.jpg" alt="Logo" class="w-8 h-8 rounded-full" />
+          <h1 class="text-2xl italianno text-fuchsia-500 font-semibold">
+            Sugar Nail Art
+          </h1>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="px-6 py-6">
+      <!-- Welcome Section -->
+      <div class="mb-4">
+        <h2 class="text-xl text-center font-semibold mb-2">Layanan Kami 💅</h2>
+      </div>
+
+      <!-- Packages Section -->
+      <section class="mb-8">
+        <div class="space-y-6">
+          <!-- Basic Package -->
+          <div
+            class="package-card bg-white rounded-2xl shadow-md overflow-hidden"
+            data-package="Basic Package"
+            data-price="50000"
+          >
+            <div
+              class="aspect-video bg-gradient-to-br from-purple-100 to-pink-100 relative overflow-hidden"
+            >
+              <img
+                src="/assets/basic-package.png"
+                alt="Basic Package"
+                class="package-image"
+                onerror="this.style.display = 'none'"
+              />
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <h3 class="text-lg font-semibold">Basic Package</h3>
+                  <p class="text-xs text-gray-500 mt-1">Basic Package</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-xs text-gray-500">Mulai dari</p>
+                  <p class="text-xl font-bold text-primary-purple">Rp50K</p>
+                </div>
+              </div>
+              <button
+                class="add-to-cart-btn w-full btn-primary text-white font-semibold py-3 rounded-full flex items-center justify-center gap-2"
+              >
+                <i data-feather="shopping-bag" width="18" height="18"></i>
+                <span>Tambah Pesanan</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Deluxe Package -->
+          <div
+            class="package-card bg-white rounded-2xl shadow-md overflow-hidden"
+            data-package="Deluxe Package"
+            data-price="100000"
+          >
+            <div
+              class="aspect-video bg-gradient-to-br from-pink-100 to-purple-200 relative overflow-hidden"
+            >
+              <img
+                src="/assets/deluxe-package.png"
+                alt="Deluxe Package"
+                class="package-image"
+                onerror="this.style.display = 'none'"
+              />
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <h3 class="text-lg font-semibold">Deluxe Package</h3>
+                  <p class="text-xs text-gray-500 mt-1">Deluxe Package</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-xs text-gray-500">Mulai dari</p>
+                  <p class="text-xl font-bold text-vibrant-pink">Rp100K</p>
+                </div>
+              </div>
+              <button
+                class="add-to-cart-btn w-full btn-primary text-white font-semibold py-3 rounded-full flex items-center justify-center gap-2"
+              >
+                <i data-feather="shopping-bag" width="18" height="18"></i>
+                <span>Tambah Pesanan</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Premium Package -->
+          <div
+            class="package-card bg-white rounded-2xl shadow-md overflow-hidden"
+            data-package="Premium Package"
+            data-price="150000"
+          >
+            <div
+              class="aspect-video bg-gradient-to-br from-purple-200 to-pink-200 relative overflow-hidden"
+            >
+              <img
+                src="/assets/premium-package.png"
+                alt="Premium Package"
+                class="package-image"
+                onerror="this.style.display = 'none'"
+              />
+            </div>
+            <div class="p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <h3 class="text-lg font-semibold">Premium Package</h3>
+                  <p class="text-xs text-gray-500 mt-1">Premium Package</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-xs text-gray-500">Mulai dari</p>
+                  <p class="text-xl font-bold text-primary-purple">Rp150K</p>
+                </div>
+              </div>
+              <button
+                class="add-to-cart-btn w-full btn-primary text-white font-semibold py-3 rounded-full flex items-center justify-center gap-2"
+              >
+                <i data-feather="shopping-bag" width="18" height="18"></i>
+                <span>Tambah Pesanan</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Gallery Section -->
+      <section class="mb-8">
+        <h2 class="text-xl text-center font-semibold mb-4">
+          Gallery Inspirasi ✨
+        </h2>
+        <div class="gallery-grid">
+          <div class="gallery-item">
+            <img
+              src="/assets/gallery-1.jpg"
+              alt="Nail Art Inspiration"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+          <div class="gallery-item">
+            <img
+              src="/assets/gallery-2.jpg"
+              alt="Nail Art Inspiration"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+          <div class="gallery-item">
+            <img
+              src="/assets/gallery-3.jpg"
+              alt="Nail Art Inspiration"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+          <div class="gallery-item">
+            <img
+              src="/assets/gallery-4.jpg"
+              alt="Nail Art Inspiration"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <p class="text-center text-xs text-gray-500">
+          &copy; 2026 Sugar Nail Art by Dhian Aksara.
+        </p>
+        <p class="text-center text-xs text-gray-500">
+          All rights reserved.
+        </p>
+      </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-200 z-50"
+    >
+      <div class="flex items-center justify-around py-3 px-6">
+        <a
+          href="index.html"
+          class="nav-item active flex flex-col items-center gap-1"
+        >
+          <i data-feather="home" width="24" height="24"></i>
+          <span class="text-xs font-medium">Home</span>
+        </a>
+        <a
+          href="cart.html"
+          class="nav-item flex flex-col items-center gap-1 text-gray-400"
+        >
+          <i data-feather="shopping-cart" width="24" height="24"></i>
+          <span class="text-xs font-medium">Cart</span>
+        </a>
+        <a
+          href="orders.html"
+          class="nav-item flex flex-col items-center gap-1 text-gray-400"
+        >
+          <i data-feather="file-text" width="24" height="24"></i>
+          <span class="text-xs font-medium">Orders</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main App Script -->
+    <script src="app.js"></script>
+    <script>
+      // Initialize Feather Icons
+      feather.replace();
+
+      // Add to cart functionality
+      document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          const card = this.closest(".package-card");
+          const packageName = card.dataset.package;
+          const packagePrice = parseInt(card.dataset.price);
+
+          // Save to localStorage
+          localStorage.setItem(
+            "selectedPackage",
+            JSON.stringify({
+              name: packageName,
+              price: packagePrice,
+            }),
+          );
+
+          // Show toast
+          showToast(`${packageName} ditambahkan ke keranjang!`);
+
+          // Navigate to cart after short delay
+          setTimeout(() => {
+            window.location.href = "cart.html";
+          }, 800);
+        });
+      });
+    </script>
+  </body>
+</html>
